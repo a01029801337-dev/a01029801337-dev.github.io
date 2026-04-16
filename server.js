@@ -12,6 +12,9 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-session-secret";
+const MESSAGE_RETENTION_DAYS = 7;
+const MESSAGE_RETENTION_MS = MESSAGE_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+const MESSAGE_PRUNE_INTERVAL_MS = 60 * 60 * 1000;
 
 const ADMIN_USERNAME = "asd777";
 const ADMIN_DEFAULT_PASSWORD = "admin1234";
@@ -184,6 +187,25 @@ function addMessage({ type, text, fromUserId, toUserId = null }) {
   store.messages.push(message);
   writeStore(store);
   return { store, message };
+}
+
+function pruneOldMessages() {
+  const store = readStore();
+  const now = Date.now();
+  const cutoff = now - MESSAGE_RETENTION_MS;
+  const originalCount = store.messages.length;
+
+  store.messages = store.messages.filter((message) => {
+    const createdAtMs = Date.parse(message.createdAt);
+    if (!Number.isFinite(createdAtMs)) {
+      return true;
+    }
+    return createdAtMs >= cutoff;
+  });
+
+  if (store.messages.length !== originalCount) {
+    writeStore(store);
+  }
 }
 
 function toChatMessage(message, store) {
@@ -738,6 +760,8 @@ io.on("connection", (socket) => {
 });
 
 ensureStore();
+pruneOldMessages();
+setInterval(pruneOldMessages, MESSAGE_PRUNE_INTERVAL_MS);
 server.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}`);
   console.log(`Admin login: id=${ADMIN_USERNAME} / password=${ADMIN_DEFAULT_PASSWORD}`);
