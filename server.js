@@ -279,6 +279,10 @@ app.get("/", (req, res) => {
   return res.redirect(resolveHomePath(user));
 });
 
+app.get("/healthz", (req, res) => {
+  return res.status(200).send("ok");
+});
+
 app.get("/login", (req, res) => {
   const user = getSessionUser(req);
   if (user) {
