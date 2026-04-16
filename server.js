@@ -13,7 +13,7 @@ const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-session-secret";
 
-const ADMIN_USERNAME = "huh9991";
+const ADMIN_USERNAME = "asd777";
 const ADMIN_DEFAULT_PASSWORD = "admin1234";
 const ADMIN_DISPLAY_NAME = "관리자";
 
