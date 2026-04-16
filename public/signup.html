@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입 | 관리자 채팅 사이트</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1 class="title">회원가입</h1>
+        <p class="subtitle">가입 후 관리자의 승인을 받으면 채팅이 열립니다.</p>
+
+        <form id="signup-form">
+          <label class="field">
+            <span>아이디 (3~20자)</span>
+            <input type="text" name="username" minlength="3" maxlength="20" required />
+          </label>
+
+          <label class="field">
+            <span>표시 이름 (2~20자)</span>
+            <input type="text" name="displayName" minlength="2" maxlength="20" required />
+          </label>
+
+          <label class="field">
+            <span>비밀번호 (6자 이상)</span>
+            <input type="password" name="password" minlength="6" required />
+          </label>
+
+          <button type="submit" class="btn primary">가입하기</button>
+        </form>
+
+        <p class="status" id="status"></p>
+        <p>이미 계정이 있으면 <a href="/login">로그인</a> 해주세요.</p>
+      </section>
+    </main>
+    <script src="/assets/signup.js"></script>
+  </body>
+</html>
