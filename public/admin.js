@@ -4,6 +4,7 @@ const changePasswordBtn = document.getElementById("change-password-btn");
 const pendingList = document.getElementById("pending-list");
 const announcementRequestList = document.getElementById("announcement-request-list");
 const announcementLog = document.getElementById("announcement-log");
+const clearAnnouncementsBtn = document.getElementById("clear-announcements-btn");
 const announcementForm = document.getElementById("announcement-form");
 const announcementInput = document.getElementById("announcement-input");
 const userPicker = document.getElementById("user-picker");
@@ -27,6 +28,7 @@ function formatTime(iso) {
   return date.toLocaleString("ko-KR", {
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 }
@@ -314,6 +316,16 @@ async function loadAnnouncements() {
   );
 }
 
+async function clearAnnouncements() {
+  await fetchJson("/api/admin/announcements", { method: "DELETE" });
+  renderMessages(
+    announcementLog,
+    [],
+    { currentUserId: me.id, showSenderName: false },
+    "아직 공지가 없습니다."
+  );
+}
+
 async function loadPrivateMessages() {
   if (!selectedUserId) {
     renderMessages(privateLog, [], { currentUserId: me.id, showSenderName: true }, "1:1 대화 상대를 선택해 주세요.");
@@ -337,6 +349,15 @@ function setupSocket() {
       currentUserId: me.id,
       showSenderName: false,
     });
+  });
+
+  socket.on("announcement:cleared", () => {
+    renderMessages(
+      announcementLog,
+      [],
+      { currentUserId: me.id, showSenderName: false },
+      "아직 공지가 없습니다."
+    );
   });
 
   socket.on("private:new", (message) => {
@@ -411,6 +432,19 @@ announcementForm.addEventListener("submit", (event) => {
   }
   socket.emit("announcement:send", { text });
   announcementInput.value = "";
+});
+
+clearAnnouncementsBtn.addEventListener("click", async () => {
+  const ok = window.confirm("공지 채팅방 메시지를 전체 삭제할까요?");
+  if (!ok) {
+    return;
+  }
+
+  try {
+    await clearAnnouncements();
+  } catch (error) {
+    window.alert(error.message);
+  }
 });
 
 privateForm.addEventListener("submit", (event) => {

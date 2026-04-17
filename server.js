@@ -260,6 +260,18 @@ function broadcastAnnouncement(message) {
   });
 }
 
+function broadcastAnnouncementCleared() {
+  const store = readStore();
+  store.users.forEach((user) => {
+    const canReceive =
+      user.role === "admin" || (user.role === "user" && user.approved && user.announcementAccess === "approved");
+
+    if (canReceive) {
+      io.to(`user:${user.id}`).emit("announcement:cleared");
+    }
+  });
+}
+
 const sessionMiddleware = session({
   secret: SESSION_SECRET,
   resave: false,
@@ -521,6 +533,19 @@ app.get("/api/admin/users", requireAuth, requireAdmin, (req, res) => {
     .filter((user) => user.role === "user" && user.approved)
     .map((user) => sanitizeUser(user));
   return res.json({ users: approvedUsers });
+});
+
+app.delete("/api/admin/announcements", requireAuth, requireAdmin, (req, res) => {
+  const store = readStore();
+  const beforeCount = store.messages.length;
+
+  store.messages = store.messages.filter((message) => message.type !== "announcement");
+  if (store.messages.length !== beforeCount) {
+    writeStore(store);
+  }
+
+  broadcastAnnouncementCleared();
+  return res.json({ ok: true, deleted: beforeCount - store.messages.length });
 });
 
 app.get("/api/admin/announcement-requests", requireAuth, requireAdmin, (req, res) => {

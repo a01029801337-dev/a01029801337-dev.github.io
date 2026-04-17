@@ -19,6 +19,7 @@ function formatTime(iso) {
   return date.toLocaleString("ko-KR", {
     hour: "2-digit",
     minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 }
@@ -216,6 +217,18 @@ function setupSocket() {
       currentUserId: me.id,
       showSenderName: true,
     });
+  });
+
+  socket.on("announcement:cleared", () => {
+    if (me.announcementAccess !== "approved") {
+      return;
+    }
+    renderMessages(
+      announcementLog,
+      [],
+      { currentUserId: me.id, showSenderName: true },
+      "아직 공지가 없습니다."
+    );
   });
 
   socket.on("announcement:access-granted", async () => {
