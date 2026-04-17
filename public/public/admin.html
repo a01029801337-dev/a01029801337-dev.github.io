@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>관리자 대시보드 | 관리자 채팅 사이트</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="topbar">
+        <h1 id="welcome">관리자 대시보드</h1>
+        <div class="top-actions">
+          <button id="delete-user-btn" class="btn danger" type="button">선택 사용자 탈퇴</button>
+          <button id="change-password-btn" class="btn secondary" type="button">비밀번호 변경</button>
+          <button id="logout-btn" class="btn secondary" type="button">로그아웃</button>
+        </div>
+      </header>
+
+      <section class="grid-admin">
+        <article class="panel">
+          <h2>가입 승인 대기</h2>
+          <div id="pending-list" class="list"></div>
+
+          <h2 class="subheading">공지방 신청 대기</h2>
+          <div id="announcement-request-list" class="list"></div>
+        </article>
+
+        <article class="panel">
+          <h2>공지 채팅방</h2>
+          <button id="clear-announcements-btn" class="btn danger" type="button">공지 전체삭제</button>
+          <div id="announcement-log" class="chat-log"></div>
+          <form id="announcement-form" class="compose">
+            <input id="announcement-input" type="text" maxlength="800" placeholder="전체 공지 메시지" required />
+            <button type="submit">공지 전송</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>사용자 1:1 채팅</h2>
+          <select id="user-picker" class="user-picker"></select>
+          <div id="private-log" class="chat-log"></div>
+          <form id="private-form" class="compose">
+            <input id="private-input" type="text" maxlength="800" placeholder="선택한 사용자에게 메시지" required />
+            <button type="submit">전송</button>
+          </form>
+        </article>
+      </section>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/admin.js"></script>
+  </body>
+</html>

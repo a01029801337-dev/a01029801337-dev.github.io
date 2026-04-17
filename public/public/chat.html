@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>채팅 | 관리자 채팅 사이트</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="topbar">
+        <h1 id="welcome">실시간 채팅</h1>
+        <div class="top-actions">
+          <button id="change-password-btn" class="btn secondary" type="button">비밀번호 변경</button>
+          <button id="logout-btn" class="btn secondary" type="button">로그아웃</button>
+        </div>
+      </header>
+
+      <section class="grid-user">
+        <article class="panel">
+          <h2>공지 채팅방 (신청/수락 필요)</h2>
+          <div id="announcement-gate" class="banner"></div>
+          <button id="announcement-request-btn" class="btn primary" type="button">공지방 신청하기</button>
+          <div id="announcement-log" class="chat-log"></div>
+        </article>
+
+        <article class="panel">
+          <h2>관리자와 1:1 채팅</h2>
+          <div id="private-log" class="chat-log"></div>
+          <form id="private-form" class="compose">
+            <input id="private-input" type="text" maxlength="800" placeholder="관리자에게 보낼 메시지" required />
+            <button type="submit">전송</button>
+          </form>
+        </article>
+      </section>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/chat.js"></script>
+  </body>
+</html>
